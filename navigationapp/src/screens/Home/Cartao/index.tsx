@@ -1,25 +1,10 @@
 import { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const lancamento = {
-    id: '1',
-    name: 'Lançamento de Janeiro',
-    icone: '📅',  // Pode ser um ícone de sua escolha
-    valor: '1500.00',
-    data: '2025-01-10',
-    compras: [
-      { id: '1', name: 'Compra 1', valor: '500.00', data: '2025-01-05' },
-      { id: '2', name: 'Compra 2', valor: '700.00', data: '2025-01-06' },
-      { id: '3', name: 'Compra 3', valor: '300.00', data: '2025-01-07' },
-    ],
-  };
-  
-
-export default function Cartao() 
+export default function Cartao(lancamento: any) 
 {
-
+  lancamento = lancamento.lancamento;
   const [mostrarCompras, setMostrarCompras] = useState(false);
-
   const formatar = (data: string) => {
     // Função para formatar a data, pode ser ajustada conforme necessário
     return new Date(data).toLocaleDateString();
@@ -111,7 +96,7 @@ const styles = StyleSheet.create({
     valor: {
         color: 'red',
     },
-        toggleButton: {
+    toggleButton: {
         padding: 10,
         backgroundColor: '#ddd',
         alignItems: 'center',
@@ -124,14 +109,14 @@ const styles = StyleSheet.create({
     comprasContainer: {
         marginTop: 15,
     },
-        comprasRow: {
+      comprasRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 8,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
-        comprasText: {
+      comprasText: {
         fontSize: 14,
         flex: 1,
         textAlign: 'center',
