@@ -1,32 +1,65 @@
 import {View, StyleSheet, Text } from 'react-native';
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
+import ValoresTotal from '../ValoresTotal';
+import Cartao from '../Cartao';
 
+
+type MesValor = {
+  mes: string,
+  valor: number
+}
 type Ano = {
   ano: number;
-  meses: string[]; 
+  valor: number
+  meses: MesValor[]
 };
 
-const anos: Ano[] = [
-  {ano: 2024, meses: ["Janeiro", "Fevereiro"]},
-  {ano: 2025, meses: ["Janeiro", "Fevereiro", "Março"]}
+type Lancamento = {
+  id: string,
+  name: string,
+  icone: string,  // Pode ser um ícone de sua escolha
+  valor: string,
+  data: Date,
+  compras: Compras[],
+}
+
+type Compras = {
+  id: string, name: string, valor: string, data: string
+}
+
+const nomeMeses = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ]
 
 const anoAtual = new Date().getFullYear();
 
-export default function SelectAno() {
-  const [selectedValue, setSelectedValue] = useState(anoAtual)
-  const [monstrarMeses, setMostrarMeses] = useState(false);
-  const [meses, setMeses] = useState<string[]>([]);
+export default function SelectAno(props: {lancamentos: Lancamento[], tempo: Ano[]}) 
+{
+  const [lancamentos, setlLancamentos] = useState<Lancamento[] | []>([])
+  const [tempos] = useState<Ano[]>(props.tempo)
+  const [anoSelecionadoValor, setAnoSelecionadoValor] = useState<number>(0)
+  const [mostrarSelecionarMeses, setMostrarSelecionarMeses] = useState<boolean>(false)
+  const [mesesSelecionado, setMesesSelecionado] = useState<MesValor[] | []>([])
+  const [mesSelecioando, setMesSelecioando] = useState<number>(0);
+  const [anoSelecionado, setAnoSelecionado] = useState<number>();
 
-  function selectMeses(anoEscolido: any)
+  function selectMeses(anoEscolido: number)
   {
-    const resultado = anos.filter(ano => ano.ano === Number(anoEscolido));
+    const resultado = tempos.filter(ano => ano.valor === Number(anoEscolido));
     if (resultado) {
-      setMeses(resultado[0].meses);
+      setAnoSelecionado(resultado[0].ano)
+      setMesesSelecionado(resultado[0].meses);
     } else {
-      setMeses([]);
+      setMesesSelecionado([]);
     }
+  }
+
+  function selectLancamentos(mes: number)
+  {  
+    const selectLancamentos = props.lancamentos.filter(lancamento => 
+      lancamento.data.getFullYear() === Number(anoSelecionado) && lancamento.data.getMonth() === Number(mes));
+    setlLancamentos(selectLancamentos);
   }
 
   return (
@@ -35,34 +68,45 @@ export default function SelectAno() {
         <View style={styles.card}>
           <View style={styles.container}>
             <Picker
-              selectedValue={selectedValue}
+              selectedValue={anoSelecionadoValor}
               onValueChange={(itemValue) => {
-                setSelectedValue(itemValue)
-                setMostrarMeses(false)
+                setAnoSelecionadoValor(itemValue)
+                setMostrarSelecionarMeses(false)
                 selectMeses(itemValue)
-                setMostrarMeses(true)
+                setMostrarSelecionarMeses(true)
               }}
               style={styles.picker}
             >
-              {anos.map(ano => (
-                <Picker.Item style={styles.text} label={ano.ano.toString()} value={ano.ano} />
+              {tempos.map(ano => (
+                <Picker.Item style={styles.text} label={ano.ano.toString()} value={ano.valor} />
               ))}
             </Picker>
           </View>
-          {monstrarMeses && (
+          {mostrarSelecionarMeses && (
             <View style={styles.container}>
               <Picker
-                selectedValue="Selecione Um Mes"
-                // onValueChange={(itemValue) => selectMeses(itemValue)}
+                selectedValue= {mesSelecioando}
+                onValueChange={(itemValue) => {
+                  selectLancamentos(itemValue)
+                  setMesSelecioando(itemValue)
+                }}
                 style={styles.picker}
               >
-                {meses.map((mes) => (
-                  <Picker.Item style={styles.text} label={mes} value={mes} />
+                {mesesSelecionado.map((mes) => (
+                  <Picker.Item style={styles.text} label={mes.mes} value={mes.valor} />
                 ))}
               </Picker>
             </View>
           )}
         </View>
+      </View>
+      <ValoresTotal entrada={1230} saida={1000} />
+      <View>
+        {
+        lancamentos.map(lancamento => (
+          <Cartao key={lancamento.id} lancamento={lancamento} />
+        ))
+        }
       </View>
   </View>
   );
