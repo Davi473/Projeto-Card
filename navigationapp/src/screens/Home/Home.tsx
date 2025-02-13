@@ -2,7 +2,8 @@ import {View, ScrollView, Text } from 'react-native';
 import Saudacao from './Saudacao/';
 import { useState } from 'react';
 import Cartao from './Cartao';
-import ValoresTotal from './ValoresTotal/Index';
+import ValoresTotal from './ValoresTotal';
+import SelectAno from './Select/';
 
 const lancamentos = [{
   id: '1',
@@ -36,6 +37,7 @@ export default function Home() {
   <ScrollView>
     <View style={{backgroundColor: '#fff'}}>
       <Saudacao nomeUsuario={nameUser} />
+      <SelectAno></SelectAno>
       <ValoresTotal entrada={1230} saida={1000} />
       <View>
         {lancamentos.map(lancamento => (

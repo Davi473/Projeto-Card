@@ -18,7 +18,8 @@ export default function Saudacao(props: any)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 120,
+    padding: 50,
     paddingLeft: 10
   },
   momentoDoDia: {
