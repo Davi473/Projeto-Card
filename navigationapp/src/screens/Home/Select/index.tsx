@@ -1,8 +1,12 @@
-import {View, StyleSheet, Text } from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, } from 'react-native';
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import ValoresTotal from '../ValoresTotal';
-import Cartao from '../Cartao';
+import LancamentoType from '../Object/LancamentoType';
+import LancamentoCartao from '../Object/LancamentoCartao';
+import LancamentoTypeCard from '../Cartao/Type';
+import LancamentoCartaoCard from '../Cartao/Cartao';
+import { Lancamentos } from '../Object/Lancamentos';
 
 
 type MesValor = {
@@ -34,82 +38,93 @@ const nomeMeses = [
 
 const anoAtual = new Date().getFullYear();
 
-export default function SelectAno(props: {lancamentos: Lancamento[], tempo: Ano[]}) 
+export default function SelectAno(props: {lancamentosClient: Lancamentos}) 
 {
-  const [lancamentos, setlLancamentos] = useState<Lancamento[] | []>([])
-  const [tempos] = useState<Ano[]>(props.tempo)
-  const [anoSelecionadoValor, setAnoSelecionadoValor] = useState<number>(0)
-  const [mostrarSelecionarMeses, setMostrarSelecionarMeses] = useState<boolean>(false)
-  const [mesesSelecionado, setMesesSelecionado] = useState<MesValor[] | []>([])
-  const [mesSelecioando, setMesSelecioando] = useState<number>(0);
-  const [anoSelecionado, setAnoSelecionado] = useState<number>();
-
-  function selectMeses(anoEscolido: number)
-  {
-    const resultado = tempos.filter(ano => ano.valor === Number(anoEscolido));
-    if (resultado) {
-      setAnoSelecionado(resultado[0].ano)
-      setMesesSelecionado(resultado[0].meses);
-    } else {
-      setMesesSelecionado([]);
-    }
-  }
-
-  function selectLancamentos(mes: number)
-  {  
-    const selectLancamentos = props.lancamentos.filter(lancamento => 
-      lancamento.data.getFullYear() === Number(anoSelecionado) && lancamento.data.getMonth() === Number(mes));
-    setlLancamentos(selectLancamentos);
-  }
+    const lancamentoClienteLista = props.lancamentosClient.lista()
 
   return (
     <View>
-      <View style={styles.margin}>
-        <View style={styles.card}>
-          <View style={styles.container}>
-            <Picker
-              selectedValue={anoSelecionadoValor}
-              onValueChange={(itemValue) => {
-                setAnoSelecionadoValor(itemValue)
-                setMostrarSelecionarMeses(false)
-                selectMeses(itemValue)
-                setMostrarSelecionarMeses(true)
-              }}
-              style={styles.picker}
-            >
-              {tempos.map(ano => (
-                <Picker.Item style={styles.text} label={ano.ano.toString()} value={ano.valor} />
-              ))}
-            </Picker>
-          </View>
-          {mostrarSelecionarMeses && (
-            <View style={styles.container}>
-              <Picker
-                selectedValue= {mesSelecioando}
-                onValueChange={(itemValue) => {
-                  selectLancamentos(itemValue)
-                  setMesSelecioando(itemValue)
-                }}
-                style={styles.picker}
-              >
-                {mesesSelecionado.map((mes) => (
-                  <Picker.Item style={styles.text} label={mes.mes} value={mes.valor} />
-                ))}
-              </Picker>
-            </View>
-          )}
-        </View>
-      </View>
-      <ValoresTotal entrada={1230} saida={1000} />
-      <View>
-        {
-        lancamentos.map(lancamento => (
-          <Cartao key={lancamento.id} lancamento={lancamento} />
-        ))
-        }
-      </View>
-  </View>
-  );
+      <ValoresTotal entrada={props.lancamentosClient.valorTotalEntrada} saida={props.lancamentosClient.valorTotalSaida} />
+      {
+        lancamentoClienteLista.map(lancamento => {
+          if (lancamento instanceof LancamentoType)
+            return <LancamentoTypeCard key={lancamento.id} lancamento={lancamento} />;
+          if (lancamento instanceof LancamentoCartao)
+            return <LancamentoCartaoCard key={lancamento.id} lancamento={lancamento} />;
+        })
+      }
+    </View>
+  )
+  // const [lancamentos, setlLancamentos] = useState<any[]>([])
+  // const [tempos] = useState<Ano[]>(props.lancamentosClient.time)
+  // const [anoSelecionadoValor, setAnoSelecionadoValor] = useState<number>(0)
+  // const [mostrarSelecionarMeses, setMostrarSelecionarMeses] = useState<boolean>(false)
+  // const [mesesSelecionado, setMesesSelecionado] = useState<MesValor[] | []>([])
+  // const [mesSelecioando, setMesSelecioando] = useState<number>(0);
+  // const [anoSelecionado, setAnoSelecionado] = useState<number>();
+
+  // function selectMeses(anoEscolido: number)
+  // {
+  //   const resultado = tempos.filter(ano => ano.valor === Number(anoEscolido));
+  //   if (resultado) {
+  //     setAnoSelecionado(resultado[0].ano)
+  //     setMesesSelecionado(resultado[0].meses);
+  //   } else {
+  //     setMesesSelecionado([]);
+  //   }
+  // }
+
+  // function selectLancamentos(mes: number)
+  // {  
+  //   const selectLancamentosCliente = props.lancamentosClient.lista().filter(lancamento => 
+  //     lancamento.data.getFullYear() === Number(anoSelecionado) && lancamento.data.getMonth() === Number(mes));
+  //   setlLancamentos(selectLancamentosCliente);
+  // }
+
+  // return (
+  //   <View>
+  //     <View style={styles.margin}>
+  //       <View style={styles.card}>
+  //         <View style={styles.container}>
+  //           <Picker
+  //             selectedValue={anoSelecionadoValor}
+  //             onValueChange={(itemValue) => {
+  //               setAnoSelecionadoValor(itemValue)
+  //               setMostrarSelecionarMeses(false)
+  //               selectMeses(itemValue)
+  //               setMostrarSelecionarMeses(true)
+  //             }}
+  //             style={styles.picker}
+  //           >
+  //             {tempos.map(ano => (
+  //               <Picker.Item style={styles.text} label={ano.ano.toString()} value={ano.valor} />
+  //             ))}
+  //           </Picker>
+  //         </View>
+  //         {mostrarSelecionarMeses && (
+  //           <View style={styles.container}>
+  //             <Picker
+  //               selectedValue= {mesSelecioando}
+  //               onValueChange={(itemValue) => {
+  //                 selectLancamentos(itemValue)
+  //                 setMesSelecioando(itemValue)
+  //               }}
+  //               style={styles.picker}
+  //             >
+  //               {mesesSelecionado.map((mes) => (
+  //                 <Picker.Item style={styles.text} label={mes.mes} value={mes.valor} />
+  //               ))}
+  //             </Picker>
+  //           </View>
+  //         )}
+  //       </View>
+  //     </View>
+  //     <ValoresTotal entrada={1230} saida={1000} />
+  //     <View>
+        
+  //     </View>
+  // </View>
+  // );
 }
 
 const styles = StyleSheet.create({

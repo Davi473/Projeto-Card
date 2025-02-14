@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function Cartao(lancamento: any) 
+export default function LancamentoCartaoCard(lancamento: any) 
 {
   lancamento = lancamento.lancamento;
   const [mostrarCompras, setMostrarCompras] = useState(false);

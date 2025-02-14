@@ -2,14 +2,14 @@ import Lancamento from "./Lancamento";
 import LancamentoCartao from "./LancamentoCartao";
 import LancamentoType from "./LancamentoType";
 
-
-export class Lancamentos
+export class Lancamentos 
 {
     private _valorTotalEntrada: number = 0;
     private _valorTotalSaida: number = 0;
     private lancamentos: Lancamento[] = [];
+    private _time: any[] = [];
     
-    public adiciona(lancamento: Lancamento)
+    public adicona(lancamento: Lancamento)
     {
         this.lancamentos.push(lancamento);
         if (lancamento instanceof LancamentoCartao) this._valorTotalSaida += lancamento.valor;
@@ -20,9 +20,14 @@ export class Lancamentos
         }
     }
 
-    public lista(): readonly Lancamento[]
+    public lista(): any[]
     {
         return this.lancamentos;
+    }
+
+    get time (): any[]
+    {
+      return this._time;
     }
 
     get valorTotalEntrada(): number
@@ -35,7 +40,7 @@ export class Lancamentos
         return this._valorTotalSaida;
     }
 
-    public organizarDatas(): any[]
+    public organizarDatas(): void
     {
         const meses = this.lancamentos.reduce((datas, lancamento) =>
         {
@@ -60,7 +65,7 @@ export class Lancamentos
         const mes = {type: "Mes", valores: meses};
         const ano = {type: "Ano", valores: anos};
 
-        return [mes, ano];
+        this._time = [mes, ano];
     }
 
     public paraTexto(): string
