@@ -30,14 +30,14 @@ export class Lancamentos
       return this._time;
     }
 
-    get valorTotalEntrada(): number
+    get valorTotalEntrada(): string
     {
-        return this._valorTotalEntrada;
+        return this._valorTotalEntrada.toFixed(2);
     }
 
-    get valorTotalSaida(): number
+    get valorTotalSaida(): string
     {
-        return this._valorTotalSaida;
+        return this._valorTotalSaida.toFixed(2);
     }
 
     public organizarDatas(): void

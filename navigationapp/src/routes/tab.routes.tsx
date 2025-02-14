@@ -3,6 +3,7 @@ import { Feather } from "@expo/vector-icons";
 
 import Home from "../screens/Home/Home";
 import New from "../screens/New/New";
+import Grafico from "../screens/Grafico/Grafico"
 
 const Tab = createBottomTabNavigator();
 
@@ -30,10 +31,10 @@ export default function TabRoutes()
             
             <Tab.Screen
                 name="Graficos"
-                component={New}
+                component={Grafico}
                 options={{
                     tabBarIcon: ({ color, size }) => <Feather name="trending-up" color={color} size={size}/>,
-                    tabBarLabel: "Novo"
+                    tabBarLabel: "Graficos"
                 }}
             />
         </Tab.Navigator>
